@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Header = () => {
   return (
-    <div className="bg-sky-400 border-b shadow-md sticky top-0 z-50">
+    <div className="bg-orange-300 border-b shadow-md sticky top-0 z-50">
       <header className="flex justify-between items-center px-3 max-w-6xl mx-auto">
         <div>
           <p className="text-2xl font-medium">

@@ -3,6 +3,7 @@ import OAuth from "@/components/OAuth";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
+import {AiFillEyeInvisible, AiFillEye} from 'react-icons/ai';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ const SignIn = () => {
       [e.target.id]: e.target.value,
     }));
   };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
@@ -53,15 +56,16 @@ const SignIn = () => {
                   onChange={onChange}
                   className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
                 />
-                <div>
+                <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter Password"
                     value={password}
                     id="password"
                     onChange={onChange}
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
                   />
+                  {showPassword ? (<AiFillEyeInvisible onClick={()=>setShowPassword((prevState)=>!prevState)} className={'absolute right-3 top-3 text-xl cursor-pointer'}/>) : <AiFillEye onClick={()=>setShowPassword((prevState)=>!prevState)} className={'absolute right-3 top-3 text-xl cursor-pointer'}/>}
                 </div>
               </div>
               <div className="flex justify-between whitespace-nowrap text-sm sm:text-lg mt-4">
