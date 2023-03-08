@@ -4,24 +4,44 @@ import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "./../firebase";
+import { useRouter } from "next/router";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const { name, email, password } = formData;
-
-  const onChange = (e: any) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.id]: e.target.value,
-    }));
-  };
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useRouter();
+
+  const handleSignup = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      });
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), { 
+        name: name,
+        email: email,
+        created: serverTimestamp()
+       });
+      navigate.push('/')
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -46,14 +66,14 @@ const SignUp = () => {
             />
           </div>
           <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-            <form>
+            <form onSubmit={handleSignup}>
               <div>
                 <input
                   type="text"
                   placeholder="Enter Name"
                   id="name"
                   value={name}
-                  onChange={onChange}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
                 />
                 <input
@@ -61,7 +81,7 @@ const SignUp = () => {
                   placeholder="Enter Email"
                   id="email"
                   value={email}
-                  onChange={onChange}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
                 />
                 <div className="relative">
@@ -70,7 +90,7 @@ const SignUp = () => {
                     placeholder="Enter Password"
                     id="password"
                     value={password}
-                    onChange={onChange}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
                   />
                   {showPassword ? (
