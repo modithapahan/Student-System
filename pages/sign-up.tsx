@@ -2,12 +2,13 @@ import Header from "@/components/Header";
 import OAuth from "@/components/OAuth";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "./../firebase";
-import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -32,14 +33,15 @@ const SignUp = () => {
       });
       const user = userCredential.user;
 
-      await setDoc(doc(db, "users", user.uid), { 
+      await setDoc(doc(db, "users", user.uid), {
         name: name,
         email: email,
-        created: serverTimestamp()
-       });
-      navigate.push('/')
+        created: serverTimestamp(),
+      });
+      toast.success("Sign up successfully!")
+      navigate.push("/");
     } catch (error) {
-      console.log(error);
+      toast.error("Something went wrong with the registration");
     }
   };
 
