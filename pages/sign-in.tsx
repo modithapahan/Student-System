@@ -10,27 +10,30 @@ import { auth, db } from "./../firebase";
 import { toast } from "react-toastify";
 
 const SignIn = () => {
-
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignIn = async (e:any) => {
-      e.preventDefault();
+  const handleSignIn = async (e: any) => {
+    e.preventDefault();
 
-      try {
-        const userCredentials = await signInWithEmailAndPassword(auth, email, password);
-        if(userCredentials.user){
-            router.push('/');
-            toast.success("Sign in successfully!");
-        }
-      } catch (error) {
-        toast.error("Bad user credentials");
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      if (userCredentials.user) {
+        router.push("/");
+        toast.success("Sign in successfully!");
       }
-  }
+    } catch (error) {
+      toast.error("Bad user credentials");
+    }
+  };
 
   return (
     <>
@@ -63,7 +66,7 @@ const SignIn = () => {
                   placeholder="Enter Email"
                   value={email}
                   id="email"
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
                 />
                 <div className="relative">
@@ -72,7 +75,7 @@ const SignIn = () => {
                     placeholder="Enter Password"
                     value={password}
                     id="password"
-                    onChange={(e)=> setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
                   />
                   {showPassword ? (
