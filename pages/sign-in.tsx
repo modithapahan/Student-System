@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "./../firebase";
+import { auth } from "./../firebase";
 import { toast } from "react-toastify";
 
 const SignIn = () => {
