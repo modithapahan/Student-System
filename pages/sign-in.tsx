@@ -2,25 +2,35 @@ import Header from "@/components/Header";
 import OAuth from "@/components/OAuth";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "./../firebase";
+import { toast } from "react-toastify";
 
 const SignIn = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
 
-  const { email, password } = formData;
+  const router = useRouter();
 
-  const onChange = (e: any) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.id]: e.target.value,
-    }));
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleSignIn = async (e:any) => {
+      e.preventDefault();
+
+      try {
+        const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+        if(userCredentials.user){
+            router.push('/');
+            toast.success("Sign in successfully!");
+        }
+      } catch (error) {
+        toast.error("Bad user credentials");
+      }
+  }
 
   return (
     <>
@@ -46,14 +56,14 @@ const SignIn = () => {
           </div>
 
           <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-            <form>
+            <form onSubmit={handleSignIn}>
               <div>
                 <input
                   type="text"
                   placeholder="Enter Email"
                   value={email}
                   id="email"
-                  onChange={onChange}
+                  onChange={(e)=>setEmail(e.target.value)}
                   className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6"
                 />
                 <div className="relative">
@@ -62,7 +72,7 @@ const SignIn = () => {
                     placeholder="Enter Password"
                     value={password}
                     id="password"
-                    onChange={onChange}
+                    onChange={(e)=> setPassword(e.target.value)}
                     className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out"
                   />
                   {showPassword ? (
